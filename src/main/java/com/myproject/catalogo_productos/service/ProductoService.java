@@ -5,6 +5,8 @@ import com.myproject.catalogo_productos.repository.CategoriaRepository;
 import com.myproject.catalogo_productos.repository.ProductoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductoService {
     private final ProductoRepository productoRepository;
@@ -28,5 +30,28 @@ public class ProductoService {
         if (producto.getCategoria() == null || !categoriaRepo.existsById(producto.getCategoria().getId()))
             throw new InvalidDataException("Inserta una categoria real para el producto");
         return productoRepository.save(producto);
+    }
+
+    public List<Producto> obtenerProductos(){
+        return productoRepository.findAll();
+    }
+
+    public Producto actualizarProducto(Long id, Producto nuevoProducto){
+        Producto productoExistente = productoRepository.findById(id)
+                .orElseThrow(()-> new InvalidDataException("El id del producto "+id+" no existe"));
+
+        productoExistente.setNombre(nuevoProducto.getNombre());
+        productoExistente.setDescripcion(nuevoProducto.getDescripcion());
+        productoExistente.setPrecio(nuevoProducto.getPrecio());
+        productoExistente.setStock(nuevoProducto.getStock());
+        productoExistente.setCategoria(nuevoProducto.getCategoria());
+
+        return crearProducto(productoExistente);
+    }
+
+    public void eliminarProducto(Long id){
+        if(!productoRepository.existsById(id))
+            throw new InvalidDataException("El producto de id: "+id+" no existe");
+        productoRepository.deleteById(id);
     }
 }

@@ -5,6 +5,9 @@ import com.myproject.catalogo_productos.exception.InvalidDataException;
 import com.myproject.catalogo_productos.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CategoriaService {
     /**
@@ -39,6 +42,27 @@ public class CategoriaService {
             throw new InvalidDataException("Debe llenar el campo de la descripcion");
 
         return categoriaRepository.save(categoria);
+    }
+
+    public List<Categoria> obtenerCategorias(){
+
+        return categoriaRepository.findAll();
+    }
+
+    public Categoria actualizarCategoria(Long id, Categoria nuevaCategoria){
+        Categoria categoriaExistente = categoriaRepository.findById(id)
+                .orElseThrow(()-> new InvalidDataException("El id de la categoria "+id+" no existe"));
+
+        categoriaExistente.setNombre(nuevaCategoria.getNombre());
+        categoriaExistente.setDescripcion(nuevaCategoria.getDescripcion());
+
+        return crearCategoria(categoriaExistente);
+    }
+
+    public void eliminarCategoria(Long id){
+        if(!categoriaRepository.existsById(id))
+            throw new InvalidDataException("La categoria de id: "+id+" no existe");
+        categoriaRepository.deleteById(id);
     }
 
 }
