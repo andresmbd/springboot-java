@@ -1,5 +1,7 @@
 package com.myproject.catalogo_productos.service;
 
+import com.myproject.catalogo_productos.dto.CategoriaRequest;
+import com.myproject.catalogo_productos.dto.CategoriaResponse;
 import com.myproject.catalogo_productos.entity.Categoria;
 import com.myproject.catalogo_productos.exception.InvalidDataException;
 import com.myproject.catalogo_productos.repository.CategoriaRepository;
@@ -34,14 +36,23 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public Categoria crearCategoria(Categoria categoria){
-        if (categoria.getNombre() == null || categoria.getNombre().trim().isBlank())
+    public CategoriaResponse crearCategoria(CategoriaRequest request){
+        if (request.nombre() == null || request.nombre().trim().isBlank())
             throw new InvalidDataException("El nombre es obligatorio");
         // si se hace un throw no hay necesidad de un else if
-        if (categoria.getDescripcion() == null || categoria.getDescripcion().trim().isBlank())
+        if (request.descripcion() == null || request.descripcion().trim().isBlank())
             throw new InvalidDataException("Debe llenar el campo de la descripcion");
 
-        return categoriaRepository.save(categoria);
+        Categoria categoria = new Categoria();
+        categoria.setNombre(request.nombre());
+        categoria.setDescripcion(request.descripcion());
+
+        Categoria returnCategory = categoriaRepository.save(categoria);
+
+        return new CategoriaResponse(
+                returnCategory.getId(),
+                returnCategory.getNombre(),
+                returnCategory.getDescripcion());
     }
 
     public List<Categoria> obtenerCategorias(){
