@@ -1,10 +1,7 @@
 package com.myproject.catalogo_productos.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @Entity // indica que la clase es una entidad.
 @Getter
@@ -19,7 +16,6 @@ public class Categoria {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Lob
     @Column(nullable = false)
     private String descripcion;
 }
