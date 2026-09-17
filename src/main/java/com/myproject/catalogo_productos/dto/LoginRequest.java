@@ -1,4 +1,4 @@
 package com.myproject.catalogo_productos.dto;
 
-public class LoginRequest {
+public record LoginRequest(String username, String password) {
 }

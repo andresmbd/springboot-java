@@ -1,4 +1,4 @@
 package com.myproject.catalogo_productos.dto;
 
-public class RefreshRequest {
+public record RefreshRequest(String refreshToken) {
 }
