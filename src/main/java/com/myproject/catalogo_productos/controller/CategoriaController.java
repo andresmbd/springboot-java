@@ -1,6 +1,7 @@
 package com.myproject.catalogo_productos.controller;
 
-import com.myproject.catalogo_productos.entity.Categoria;
+import com.myproject.catalogo_productos.dto.CategoriaRequest;
+import com.myproject.catalogo_productos.dto.CategoriaResponse;
 import com.myproject.catalogo_productos.service.CategoriaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +20,18 @@ CategoriaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Categoria crearCategoria(@RequestBody Categoria categoria){
+    public CategoriaResponse crearCategoria(@RequestBody CategoriaRequest categoria){
         return categoriaService.crearCategoria(categoria);
     }
 
     @GetMapping// Spring responde 200 OK por defecto.
-    public List<Categoria> obtenerCategorias(){
+    public List<CategoriaResponse> obtenerCategorias(){
+
         return categoriaService.obtenerCategorias();
     }
 
     @PutMapping("/{id}")
-    public Categoria actualizarCategoria(@PathVariable Long id,@RequestBody Categoria categoria){
+    public CategoriaResponse actualizarCategoria(@PathVariable Long id,@RequestBody CategoriaRequest categoria){
         return categoriaService.actualizarCategoria(id, categoria);
     }
 

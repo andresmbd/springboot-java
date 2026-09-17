@@ -12,3 +12,9 @@ spring:
   h2:
     console:
       enabled: true
+
+  security:
+    jwt:
+      secret: demo-secret-key-change-this-in-production-123456789
+      access-token-expiration-ms: 900000
+      refresh-token-expiration-ms: 604800000

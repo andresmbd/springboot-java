@@ -1,5 +1,7 @@
 package com.myproject.catalogo_productos.controller;
 
+import com.myproject.catalogo_productos.dto.ProductoRequest;
+import com.myproject.catalogo_productos.dto.ProductoResponse;
 import com.myproject.catalogo_productos.entity.Producto;
 import com.myproject.catalogo_productos.service.ProductoService;
 import org.springframework.http.HttpStatus;
@@ -18,17 +20,19 @@ public class ProductoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Producto crearProducto(@RequestBody Producto producto){
+    public ProductoResponse crearProducto(@RequestBody ProductoRequest producto){
+
         return productoService.crearProducto(producto);
     }
 
     @GetMapping
-    public List<Producto> obtenerProductos(){
+    public List<ProductoResponse> obtenerProductos(){
+
         return productoService.obtenerProductos();
     }
 
     @PutMapping("/{id}")
-    public Producto actualizarProducto(@PathVariable Long id,@RequestBody Producto producto){
+    public ProductoResponse actualizarProducto(@PathVariable Long id,@RequestBody ProductoRequest producto){
         return productoService.actualizarProducto(id, producto);
     }
 

@@ -3,12 +3,15 @@ package com.myproject.catalogo_productos.service;
 import com.myproject.catalogo_productos.dto.CategoriaRequest;
 import com.myproject.catalogo_productos.dto.CategoriaResponse;
 import com.myproject.catalogo_productos.entity.Categoria;
+import com.myproject.catalogo_productos.exception.EntityNotFoundExeption;
 import com.myproject.catalogo_productos.exception.InvalidDataException;
 import com.myproject.catalogo_productos.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoriaService {
@@ -36,16 +39,22 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public CategoriaResponse crearCategoria(CategoriaRequest request){
+    private CategoriaRequest validarCategoria(CategoriaRequest request){
         if (request.nombre() == null || request.nombre().trim().isBlank())
             throw new InvalidDataException("El nombre es obligatorio");
         // si se hace un throw no hay necesidad de un else if
         if (request.descripcion() == null || request.descripcion().trim().isBlank())
             throw new InvalidDataException("Debe llenar el campo de la descripcion");
 
+        return request;
+    }
+
+    public CategoriaResponse crearCategoria(CategoriaRequest request){
+        CategoriaRequest categoriaValidada = validarCategoria(request);
+
         Categoria categoria = new Categoria();
-        categoria.setNombre(request.nombre());
-        categoria.setDescripcion(request.descripcion());
+        categoria.setNombre(categoriaValidada.nombre());
+        categoria.setDescripcion(categoriaValidada.descripcion());
 
         Categoria returnCategory = categoriaRepository.save(categoria);
 
@@ -55,19 +64,37 @@ public class CategoriaService {
                 returnCategory.getDescripcion());
     }
 
-    public List<Categoria> obtenerCategorias(){
+    public List<CategoriaResponse> obtenerCategorias(){
 
-        return categoriaRepository.findAll();
+         List<Categoria> categorias = categoriaRepository.findAll();
+         if(categorias.isEmpty())
+             throw new EntityNotFoundExeption("La lista esta vacia");
+
+         return categorias.stream() // procesar los elementos de esta colección mediante la API de Streams
+                .map(categoria -> new CategoriaResponse(categoria.getId(),
+                        categoria.getNombre(),
+                        categoria.getDescripcion()))
+                 .collect(Collectors.toList());
     }
 
-    public Categoria actualizarCategoria(Long id, Categoria nuevaCategoria){
+    public CategoriaResponse actualizarCategoria(Long id, CategoriaRequest nuevaRequest){
+
+
         Categoria categoriaExistente = categoriaRepository.findById(id)
                 .orElseThrow(()-> new InvalidDataException("El id de la categoria "+id+" no existe"));
 
-        categoriaExistente.setNombre(nuevaCategoria.getNombre());
-        categoriaExistente.setDescripcion(nuevaCategoria.getDescripcion());
+        CategoriaRequest categoriaValidada = validarCategoria(nuevaRequest);
 
-        return crearCategoria(categoriaExistente);
+        categoriaExistente.setNombre(categoriaValidada.nombre());
+        categoriaExistente.setDescripcion(categoriaValidada.descripcion());
+
+        Categoria categoriaActualizada = categoriaRepository.save(categoriaExistente);
+
+        return  new CategoriaResponse(
+                categoriaActualizada.getId(),
+                categoriaActualizada.getNombre(),
+                categoriaActualizada.getDescripcion()
+        );
     }
 
     public void eliminarCategoria(Long id){
