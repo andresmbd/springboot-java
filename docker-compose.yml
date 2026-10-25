@@ -1,0 +1,15 @@
+services:
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: mi-bd-containe
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mi-bd
+    ports:
+      - "5433:5432"
+    volumes:
+      - mi-bd-volume:/var/lib/postgresql/data
+volumes:
+  mi-bd-volume:

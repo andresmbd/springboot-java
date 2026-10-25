@@ -1,3 +1,20 @@
 spring:
   application:
     name: spring-practica
+
+  datasource:
+    # Formato correcto: jdbc:postgresql:// [host]:[puerto]/[base_de_datos]
+    url: jdbc:postgresql://localhost:5433/mi-bd
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Le indica a Hibernate que cree o actualice automáticamente las tablas en PostgreSQL según tus clases @Entity sin borrar los datos existentes.
+      show-sql: true # Muestra en la consola de tu IDE las sentencias SQL que Hibernate genera por ti
+    properties:
+      hibernate:
+        format_sql: true # Organiza el SQL con saltos de línea y tabulaciones para que sea legible a la vista
+        dialect: org.hibernate.dialect.PostgreSQLDialect # Traduce las consultas de Java a la sintaxis exacta de PostgreSQL
+
