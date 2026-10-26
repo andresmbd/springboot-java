@@ -14,13 +14,6 @@ public class UserService implements CreateUserUseCase, GetUserUseCase {
         this.userRepositoryPort = userRepositoryPort;
     }
 
-//    private User validateUser(User user){
-//        if (user == null ) throw new InvalidEnterDataException("El Usuario no puede ser nulo");
-//        if(user.getId() == null || user.getId().equals())
-//        if (user.getFirstName() == null || user.getFirstName().trim().isBlank())
-//            throw new InvalidEnterDataException("El nombre no puede estar vacio");
-//
-//    }
 
     @Override
     public User createUser(User user) {

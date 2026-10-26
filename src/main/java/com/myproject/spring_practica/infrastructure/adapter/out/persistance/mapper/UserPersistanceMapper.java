@@ -9,7 +9,11 @@ import com.myproject.spring_practica.infrastructure.adapter.out.persistance.enti
 public class UserPersistanceMapper {
 
     public UserEntity toEntityModel(User user){
-        return new UserEntity(user.getId(), user.getFirstName(), user.getLastName());
+        return UserEntity.builder()
+                .id(user.getId())
+                .firtName(user.getFirstName())
+                .lastName(user.getLastName())
+                .build();
     }
 
      public User toDomainModel(UserEntity userEntity){

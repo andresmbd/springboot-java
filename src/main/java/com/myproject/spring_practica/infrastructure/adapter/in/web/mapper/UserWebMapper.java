@@ -10,9 +10,16 @@ import org.springframework.stereotype.Component;
 public class UserWebMapper {
 
     public User toDomainModel(CreateUserRequest createUserRequest){
-        return new User(createUserRequest.id(), createUserRequest.fistName(), createUserRequest.lastName() );
-    }
+        UserEntity userEntity = UserEntity.builder()
+                .firtName(createUserRequest.fistName())
+                .lastName(createUserRequest.lastName())
+                .build();
 
+        return new User(userEntity.getId(),
+                userEntity.getFirtName(),
+                userEntity.getLastName());
+
+    }
     public UserResponse toResponseDto(User user){
         return new UserResponse(user.getId(),user.getFirstName(),user.getLastName());
     }

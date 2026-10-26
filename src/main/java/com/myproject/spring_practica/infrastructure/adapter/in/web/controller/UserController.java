@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final CreateUserUseCase createUserUseCase;
     private final GetUserUseCase getUserUseCase;
+
     private final UserWebMapper mapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@RequestBody CreateUserRequest createUserRequest){
         User user = mapper.toDomainModel(createUserRequest);
-        createUserUseCase.createUser(user);
-        return mapper.toResponseDto(user);
+        User userSaved = createUserUseCase.createUser(user);
+        return mapper.toResponseDto(userSaved);
     }
 
     @GetMapping("/{id}")
